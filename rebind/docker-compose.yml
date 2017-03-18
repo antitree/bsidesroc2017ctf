@@ -1,0 +1,17 @@
+version: '2'
+services:
+  web:
+    build: ./flask
+    ports:
+     - "5000:5000"
+    volumes:
+     - ./flask:/app
+    environment:
+     - "PYTHONUNBUFFERED=1"
+  redis:
+    image: "redis:alpine"
+  dns:
+    build: ./dns
+    tty: true
+    ports: 
+     - "53535:53/udp"

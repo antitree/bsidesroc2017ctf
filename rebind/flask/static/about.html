@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>DNS Rebinding</h1>
+<p>DNS rebinding is an attack that attempts to induce a user into 
+letting an attacker execute code that will attempt to load internal
+network resources. This is done by running a malicious DNS server 
+that when queried, returns an internal IP of the victims machine
+instead of a public IP of a remote host. If executed, this bypasses
+the same-origin policy and the code can attempt to access internal resources to exfiltrate back to the attacker. </p>
+
+<p>I am not doing this</p>
+
+<p>But I could</p>
+
+<h1>DNS Disbanding</h1>
+<p>A disbanding attack is known by Tor and other anonymity systems
+to surreptitiously induce a client into leaking information outside
+of the normal means of communication. In the case of Tor, a common 
+disbanding attack is when the tor client accientally makes a DNS
+request routed in the clear and not through the Tor Network. The 
+results is the DNS request to the page your were visiting is not
+anonymous at all, but able to be seen by your ISP or network 
+administrators. </p>
+
+<p>This is a proof-of-concept to show whether various browsing
+functions disband DNS requests.</p>
+{% endblock %}
