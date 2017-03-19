@@ -17,11 +17,15 @@
           <h3>{{ test }} <small>{{ content["desc"] }}</small></h4> 
           <div id="{{test}}">
           {% for result in content["results"] %}
-          <p>{{ result[0] }}: {{ result[1] }}</p>
+          <p>{{ result[0] }}</p>
           {% endfor %}
           </div>
         </div>
         {% endfor %}
       </div>
-<h1>Geolocation</h1>
+<h1>DEBUG</h1>
+    <pre>
+	{{tests["CTF"] }}
+    </pre>
+
 {% endblock %}
