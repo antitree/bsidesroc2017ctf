@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Disbanding Attacks</h1>
+<p>A disbanding attack is known by Tor and VPN services  
+to surreptitiously induce a client into leaking information outside
+of the normal means of communication. 
+
+In the case of Tor, a common 
+disbanding attack is when the tor client accientally makes a DNS
+request routed in the clear and not through the Tor Network. The 
+result is the DNS request to the page your were visiting is not
+anonymous at all, but able to be seen by your ISP, network 
+administrators, or anyone listing on the wire. </p>
+
+<h1>What does this do?</h1>
+This project is an example of the types of attacks server operators can 
+perform on their users in an attempt to evade the protective measures they 
+using such as Tor, VPN, or a proxy. 
+
+This system logs unique identifying information for no more than 3 minutes after which time the system if flushed and no logs are permanently stored. This project is designed for demonstrative purposes. 
+
+<h1>How can I try it?</h1>
+Following the steps below you can create a Python script that will fail to consistently use Tor's SOCKS proxy. 
+<pre>>pip install requesocks
+>pip install beautifulsoup
+>apt-get install tor
+</pre>
+
+<p>Run the script below:</p>
+<script src="https://gist.github.com/antitree/768e1beb1f2d7d9ee9eb.js"></script>
+
+<h2>API</h2>
+<p>There's also an API that make it easier to determine the results when using scripts. Below is an examlple</p>
+
+Request:
+<pre>http://treebind.antitree.com:8000/v1/test</pre>
+
+Response:
+<pre>{'0': '1.1.1.1', '40': '2.2.2.2'}</pre>
+
+<p>the first number is the test type. 0 is for the standard remote IP check, 40 is for the DNS lookup via redirect test</p>
+
+<h1>Attacks Explanation</h1>
+<h2>WebRTC Private IP Disclosure</h2>
+<p>This attack uses the WebRTC's NAT traversing technology to uncover
+the true IP's of the user. This attack has been documented by many people
+as a way of bypassing VPNs, Proxies, and Tor to uncover a user's public 
+and private IP addresses.</p>
+
+<p><strong>Mitigation</strong>: Disable WebRTC</p>
+
+<h2>DNS Leakage</h2>
+<p>When a client is not properly configured to use a proxy, in many cases, it will decide to do DNS lookups using the systems normal DNS configuration. That usually means using the ISP's DNS server or an internal one. In this case, the DNS is passed in the clear, without the protections of the proxy. This example shows that not only the ISP can identify the DNS request, but owner of the domain as well. </p>
+
+<p><strong>Mitigation</strong>: Ensure that proxy clients always route DNS requests over the proxy. VPN services should be configured not to accidentally perform DNS requests out-of-band. When using Tor, the Tor Browser Bundle and TAILS are pre-configured to prevent accidental leakage. </p>
+
+{% endblock %}

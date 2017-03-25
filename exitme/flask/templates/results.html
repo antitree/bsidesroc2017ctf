@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block jumbo %}
+<div class="jumbotron">
+        <h1>Results</h1>
+        </div>
+{% endblock %}
+
+{% block content %}
+
+<div class="row marketing">
+{% for test, content in tests.iteritems() %}
+        <div class="col-lg-6">
+          <h3>{{ test }} <small>{{ content["desc"] }}</small></h4> 
+          <div id="{{test}}">
+          {% for result in content["results"] %}
+          <p>{{ result[0] }}: {{ result[1] }}</p>
+          {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+<h1>Geolocation</h1>
+{% endblock %}
