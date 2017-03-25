@@ -8,10 +8,13 @@ services:
      - ./flask:/app
     environment:
      - "PYTHONUNBUFFERED=1"
+    restart: always
   redis:
     image: "redis:alpine"
+    restart: always
   dns:
     build: ./dns
     tty: true
     ports: 
      - "53535:53/udp"
+    restart: always

@@ -15,6 +15,8 @@ import ipaddr
 app = Flask(__name__)
 app.secret_key = 'squiggleballsI**())S*****D'
 
+IPPREFIX = '45'
+
 DBPREFIX = 'hax.antitree.com:%s'
 A_RECORD_PREFIX = 'DNS:PASSTHRU:A:%s'
 HOSTNAME = '.hax.antitree.com.'
@@ -93,19 +95,25 @@ def add():
     if not request.json:
       return "Fail",401
     uid = request.json["uid"].lower()
-    if not len(uid) == 36: abort(401)
+    if not len(uid) == 36: 
+	return "Not a valid length", 402
+	abort(401)
     try:
         uuid.UUID(uid)
     except ValueError:
+	return "Not a UUID", 402
         abort(401)
     test = request.json["test"]
-    if not test.isdigit(): abort(401)
+    if not test.isdigit(): 
+	return "test is not a digit", 402
+	abort(401)
     result = request.json["result"]
     testresult = result.split(',')
     for ip in testresult:
         try:
             _ipv4 = ipaddr.IPAddress(ip)
         except:
+	    return "not a valid IP. Try a valid one", 402
             abort(401)
     if True:  # Todo add validation
         dbrec = DBPREFIX % uid
@@ -120,7 +128,7 @@ def add():
             #r.setex(A_RECORD_PREFIX % qname, peer[0], 30)
             #r.setex(DBPREFIX % uid + ':00', peer[0], 30)
             r.hset(dbrec, int(test), result)
-        return "Success", 201
+        return "Successfully added %s" % result, 201
     else:
         return "Invalid test results", 500
 
@@ -133,11 +141,10 @@ def api_redirect():
     url = 'http://04_' + chost + '/v1/results'
     r.hset(DBPREFIX % uid, '40', ip)
     session['uid'] = uid
-    print(url)
     return redirect(url)
 
 
-@app.route('/v1/results')
+@app.route('/v1/results', methods=['POST', 'GET'])
 def api_results():
     try:
         uid = session["uid"]
@@ -234,6 +241,10 @@ def results():
     #    "results": "",
     #    "desc": "Test DNS leak via auto-redirect"
     #}
+    tests["CTF"] = {
+	"results": [],
+	"desc": "Test to see if something is matching across all other tests"
+    }
     tests["Web"] = {
         "results": "",
         "desc": "Your standard test to see the IP requesting the page"
@@ -242,13 +253,17 @@ def results():
             (request.remote_addr,
             get_geo(request.remote_addr))
         ]
-    if "10" in ips:
-        # lol
-        tests["WebRTC"] = {
+    tests["CTF"]["results"].append([request.remote_addr])
+    tests["WebRTC"] = {
         "results": [("Test unsupported","")],
         "desc": "Test IP disclosure via WebRTC"
     }
-        tests["WebRTC"]["results"] = [(ip,get_geo(ip)) for ip in set(ips["10"].split(','))]
+    if "10" in ips:
+    	rtcips = [ip for ip in set(ips["10"].split(','))]
+	tests["CTF"]["results"].append(rtcips)
+	tests["WebRTC"]["results"] = [(ip,get_geo(ip)) for ip in set(ips["10"].split(','))]
+    else:
+	tests["CTF"]["results"].append(["MISSING WEB RTC"])
 
 
     if "0" in ips:
@@ -256,10 +271,37 @@ def results():
         "results": "",
         "desc": "Test DNS leak via various remote resource inclusion"
     }
+	dnsips = [ip for ip in set(ips["0"].split(','))]
+	print("debug: ", dnsips)
+	tests["CTF"]["results"].append(dnsips)
         tests["DNS"]["results"] = [(ip,get_geo(ip)) for ip in set(ips["0"].split(','))]
+
+	tests["CTF"]["msg"] = hack_test(tests["CTF"]["results"])
 
     print(ips)
     return render_template("results.html", tests=tests)
+
+def hack_test(tests):
+    clue = []
+    ritcheck, privipcheck, pubipcheck = False, False, False
+    priv_ips = ("192.168.", "172.16.", "10.")
+    for ip in tests:
+	ip = ip[0]
+        if ip.startswith('129.21'):
+	   clue.append("Looks like you're on RIT's network. Warmer!")
+	   ritcheck = True
+	elif ip.startswith(priv_ips):
+	   clue.append("Ooh look. I found a private IP. Warmer.")
+	   privipcheck = True
+	elif ip.startswith("67."):
+	  clue.append("67? antitree, is that you?")
+	elif not ip.startswith(priv_ips) and ip.startswith(tuple(str(i) for i in range(10))):
+	  clue.append("I found a public ip. Warmer. %s" % ip)
+	  pubipcheck = True
+    if len(clue) is 0: clue.append("Wow. Yeah that's not the right way to get there.")
+    if ritcheck and privipcheck and pubipcheck: return win_challenge()
+    
+    return clue
 
 
 @app.route('/about')
@@ -267,11 +309,10 @@ def about():
     return render_template('about.html')
 
 
-@app.route('/contact')
-def contact():
-    return render_template('about.html')
+def win_challenge():
+   return "Congratulations. The secret code is DINGLEALLTHEWAY"
 
 
 if __name__ == '__main__':
     r = redis.Redis(host="redis")
-    app.run(host='0.0.0.0',debug=True)
+    app.run(host='0.0.0.0',debug=False)
