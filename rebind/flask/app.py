@@ -249,9 +249,9 @@ def results():
         "results": "",
         "desc": "Your standard test to see the IP requesting the page"
     }
+    webips = request.remote_addr
     tests["Web"]["results"] = [
-            (request.remote_addr,
-            get_geo(request.remote_addr))
+            (webips))
         ]
     tests["CTF"]["results"].append([request.remote_addr])
     tests["WebRTC"] = {
@@ -261,6 +261,8 @@ def results():
     if "10" in ips:
     	rtcips = [ip for ip in set(ips["10"].split(','))]
 	tests["CTF"]["results"].append(rtcips)
+	if
+	
 	tests["WebRTC"]["results"] = [(ip,get_geo(ip)) for ip in set(ips["10"].split(','))]
     else:
 	tests["CTF"]["results"].append(["MISSING WEB RTC. Maybe you should try a new browser"])
@@ -270,16 +272,20 @@ def results():
         tests["DNS"] = {
         "results": "",
         "desc": "Test DNS leak via various remote resource inclusion"
-    }
+    	}
 	dnsips = [ip for ip in set(ips["0"].split(','))]
 	print("debug: ", dnsips)
 	tests["CTF"]["results"].append(dnsips)
         tests["DNS"]["results"] = [(ip,get_geo(ip)) for ip in set(ips["0"].split(','))]
 
-	tests["CTF"]["msg"] = hack_test(tests["CTF"]["results"])
+    ## Test for winners
+    tests["CTF"]["mgs"] = testhack2017(tests)     
 
     print(ips)
     return render_template("results.html", tests=tests)
+
+def testhack2017(tests)
+    return "none"
 
 def hack_test(tests):
     clue = []
