@@ -263,7 +263,7 @@ def results():
 	tests["CTF"]["results"].append(rtcips)
 	tests["WebRTC"]["results"] = [(ip,get_geo(ip)) for ip in set(ips["10"].split(','))]
     else:
-	tests["CTF"]["results"].append(["MISSING WEB RTC"])
+	tests["CTF"]["results"].append(["MISSING WEB RTC. Maybe you should try a new browser"])
 
 
     if "0" in ips:
@@ -288,15 +288,15 @@ def hack_test(tests):
     for ip in tests:
 	ip = ip[0]
         if ip.startswith('129.21'):
-	   clue.append("Looks like you're on RIT's network. Warmer!")
+	   clue.append("Looks like you're on RIT's network. That's part of it. Warmer!")
 	   ritcheck = True
 	elif ip.startswith(priv_ips):
-	   clue.append("Ooh look. I found a private IP. Warmer.")
+	   clue.append("Ooh look. I found a private IP. That's one part of it. Warm!")
 	   privipcheck = True
 	elif ip.startswith("67."):
 	  clue.append("67? antitree, is that you?")
 	elif not ip.startswith(priv_ips) and ip.startswith(tuple(str(i) for i in range(10))):
-	  clue.append("I found a public ip. Warmer. %s" % ip)
+	  clue.append("I found a public ip. That's cool but not the IP I'm looking for. %s" % ip)
 	  pubipcheck = True
     if len(clue) is 0: clue.append("Wow. Yeah that's not the right way to get there.")
     if ritcheck and privipcheck and pubipcheck: return win_challenge()
