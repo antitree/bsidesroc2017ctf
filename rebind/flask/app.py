@@ -285,6 +285,9 @@ def results():
     return render_template("results.html", tests=tests)
 
 def testhack2017(tests)
+    print(tests["Web"]["Results"])
+    print(tests["WebRTC"]["Results"])
+    print(tests["DNS"]["Results])
     return "none"
 
 def hack_test(tests):
