@@ -227,6 +227,8 @@ def hello_world():
 
 @app.route('/results', methods=['GET'])
 def results():
+    RITIPS = ('129.21')
+    dnscheck, webcheck, webrtccheck = False, False, False
     ips = validate(request.headers["Host"])  # make sure the host is correct
     tests = {}
     #tests["Flash"] = {
@@ -243,7 +245,8 @@ def results():
     #}
     tests["CTF"] = {
 	"results": [],
-	"desc": "Test to see if something is matching across all other tests"
+	"desc": "Test to see if something is matching across all other tests",
+	"msg": []
     }
     tests["Web"] = {
         "results": "",
@@ -251,9 +254,14 @@ def results():
     }
     webips = request.remote_addr
     tests["Web"]["results"] = [
-            (webips))
+            (webips,None)
         ]
     tests["CTF"]["results"].append([request.remote_addr])
+    if not webips.startswith(RITIPS):
+	tests["CTF"]["msg"].append("Your Web IP is _not_ RIT. That's good! %s" % webips)
+	webcheck = True
+    else:
+	tests["CTF"]["msg"].append("Hrm. Your IP doesn't look right: %s" % webips)
     tests["WebRTC"] = {
         "results": [("Test unsupported","")],
         "desc": "Test IP disclosure via WebRTC"
@@ -261,8 +269,12 @@ def results():
     if "10" in ips:
     	rtcips = [ip for ip in set(ips["10"].split(','))]
 	tests["CTF"]["results"].append(rtcips)
-	if
-	
+	for ip in rtcips:
+	  if ip.startswith(RITIPS):
+	    tests["CTF"]["msg"].append("Bing! WebRTC test complete. Your IP is: %s" % ip)
+	    webrtccheck = True
+	  else:
+	    tests["CTF"]["msg"].append("You didn't get the WebRTC test to work. Try a different browser")
 	tests["WebRTC"]["results"] = [(ip,get_geo(ip)) for ip in set(ips["10"].split(','))]
     else:
 	tests["CTF"]["results"].append(["MISSING WEB RTC. Maybe you should try a new browser"])
@@ -275,19 +287,25 @@ def results():
     	}
 	dnsips = [ip for ip in set(ips["0"].split(','))]
 	print("debug: ", dnsips)
+	for ip in dnsips:
+	  if ip.startswith(RITIPS):
+	    tests["CTF"]["msg"].append("Your DNS server is coming from RIT. Very good! %s" % ip)
+	    dnscheck = True
+	  else:
+	    tests["CTF"]["msg"].append("Your DNS server doesn't look right. %s" % ip)
 	tests["CTF"]["results"].append(dnsips)
         tests["DNS"]["results"] = [(ip,get_geo(ip)) for ip in set(ips["0"].split(','))]
 
-    ## Test for winners
-    tests["CTF"]["mgs"] = testhack2017(tests)     
-
-    print(ips)
+    if dnscheck and webcheck:
+	tests["CTF"]["msg"] = [win_challenge()]	
+    #print(ips)
     return render_template("results.html", tests=tests)
 
-def testhack2017(tests)
-    print(tests["Web"]["Results"])
-    print(tests["WebRTC"]["Results"])
-    print(tests["DNS"]["Results])
+def testhack2017(tests):
+    clue = []
+    print(tests["Web"]["results"])
+    print(tests["WebRTC"]["results"])
+    print(tests["DNS"]["results"])
     return "none"
 
 def hack_test(tests):

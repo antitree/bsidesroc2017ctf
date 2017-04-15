@@ -1,0 +1,3 @@
+Disallow: /admin/
+Disallow: /formats/
+Disallow: /cgi-bin/

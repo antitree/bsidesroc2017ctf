@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://bsidesrocnas4mat.onion/about/</loc>
+    <lastmod>2012-04-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://bsidesrocnas4mat.onion/formats/</loc>
+    <lastmod>2012-04-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://bsidesrocnas4mat.onion/</loc>
+    <lastmod>2012-04-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://bsidesrocnas4mat.onion/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://bsidesrocnas4mat.onion/tags/formatting/</loc>
+    <lastmod>2012-04-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://bsidesrocnas4mat.onion/tags/nas/</loc>
+    <lastmod>2012-04-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://bsidesrocnas4mat.onion/categories/onions/</loc>
+    <lastmod>2012-04-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://bsidesrocnas4mat.onion/categories/stupid/</loc>
+    <lastmod>2012-04-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://bsidesrocnas4mat.onion/tags/</loc>
+    <lastmod>2012-04-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+</urlset>
