@@ -228,6 +228,7 @@ def hello_world():
 @app.route('/results', methods=['GET'])
 def results():
     RITIPS = ('129.21')
+    RITPRIV = ('10.')
     dnscheck, webcheck, webrtccheck = False, False, False
     ips = validate(request.headers["Host"])  # make sure the host is correct
     tests = {}
@@ -270,11 +271,13 @@ def results():
     	rtcips = [ip for ip in set(ips["10"].split(','))]
 	tests["CTF"]["results"].append(rtcips)
 	for ip in rtcips:
-	  if ip.startswith(RITIPS):
+	  if ip.startswith(RITPRIV):
 	    tests["CTF"]["msg"].append("Bing! WebRTC test complete. Your IP is: %s" % ip)
 	    webrtccheck = True
+	  elif ip:
+	    tests["CTF"]["msg"].append("WebRTC test work but it's not the right results. ")
 	  else:
-	    tests["CTF"]["msg"].append("You didn't get the WebRTC test to work. Try a different browser")
+	    tests["CTF"]["msg"].append("WebRTC test to work. Try a different browser")
 	tests["WebRTC"]["results"] = [(ip,get_geo(ip)) for ip in set(ips["10"].split(','))]
     else:
 	tests["CTF"]["results"].append(["MISSING WEB RTC. Maybe you should try a new browser"])
